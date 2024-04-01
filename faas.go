@@ -187,7 +187,10 @@ func readJSON(w http.ResponseWriter, r *http.Request, dst interface{}) error {
 		// *json.SyntaxError. If it does, then return a user-readable error
 		// message including the location of the problem
 		case errors.As(err, &syntaxError):
-			return fmt.Errorf("body contains badly-formed JSON (at character %d)", syntaxError.Offset)
+			return fmt.Errorf(
+				"body contains badly-formed JSON (at character %d)",
+				syntaxError.Offset,
+			)
 
 		// Decode() can also return an io.ErrUnexpectedEOF for JSON syntax errors. This is
 		// checked for with errors.Is() and returns a generic error message to the client.
@@ -198,9 +201,15 @@ func readJSON(w http.ResponseWriter, r *http.Request, dst interface{}) error {
 		// struct.
 		case errors.As(err, &unmarshallTypeError):
 			if unmarshallTypeError.Field != "" {
-				return fmt.Errorf("body contains incorrect JSON type for field %q", unmarshallTypeError.Field)
+				return fmt.Errorf(
+					"body contains incorrect JSON type for field %q",
+					unmarshallTypeError.Field,
+				)
 			}
-			return fmt.Errorf("body contains incorrect JSON type (at character %d)", unmarshallTypeError.Offset)
+			return fmt.Errorf(
+				"body contains incorrect JSON type (at character %d)",
+				unmarshallTypeError.Offset,
+			)
 
 		// An EOF error will be returned by Decode() if the request body is empty. Use errors.Is()
 		// to check for this and return a human-readable error message

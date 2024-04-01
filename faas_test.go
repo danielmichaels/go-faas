@@ -100,7 +100,8 @@ func TestValidateCORS(t *testing.T) {
 			}
 
 			if tc.shouldPass {
-				if req.Method == "OPTIONS" && resp.Header().Get("Access-Control-Allow-Headers") != "Authorization" {
+				if req.Method == "OPTIONS" &&
+					resp.Header().Get("Access-Control-Allow-Headers") != "Authorization" {
 					t.Errorf("Expected Authorization in Access-Control-Allow-Headers but got %s",
 						resp.Header().Get("Access-Control-Allow-Headers"))
 				}
@@ -149,7 +150,13 @@ func TestGetEnvOrError(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			val, err := getEnvOrError(tc.envVariabe)
 			if val != tc.expectedVal || (err != nil && err.Error() != tc.expectedErr) {
-				t.Fatalf("expect '%s' and '%s', got '%s' and '%v'", tc.expectedVal, tc.expectedErr, val, err)
+				t.Fatalf(
+					"expect '%s' and '%s', got '%s' and '%v'",
+					tc.expectedVal,
+					tc.expectedErr,
+					val,
+					err,
+				)
 			}
 		})
 	}
